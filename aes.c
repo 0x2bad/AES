@@ -53,11 +53,12 @@ void key_schedule_128(union Block *key, uint32_t W[44])
 
     memcpy(W, key, sizeof(union Block));
 
-    for (uint8_t i = 4; i < 44; i++) {
-        if (i % 4)
-            W[i] = W[i-N] ^ W[i-1];
-        else
-            W[i] = W[i-N] ^ (subW(ROTL(W[i-1], 8)) ^ rc[i/4]);
+    uint8_t i = 4;
+    while (i < 44) {
+        W[i] = W[i-N] ^ (subW(ROTL(W[i-1], 8)) ^ rc[i/4]), ++i;
+        W[i] = W[i-N] ^ W[i-1], ++i;
+        W[i] = W[i-N] ^ W[i-1], ++i;
+        W[i] = W[i-N] ^ W[i-1], ++i;
     }
 }
 
