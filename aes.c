@@ -21,7 +21,6 @@ union Block {
     uint32_t row[4];
     uint8_t cell[16];
     uint8_t cell_2d[4][4];
-    union Word word[4];
 };
 
 #define subW(x) sub_word((union Word)x)
