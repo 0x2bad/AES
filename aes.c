@@ -72,6 +72,20 @@ void print_block(union Block *block)
     printf("\n");
 }
 
+void sub_bytes(u_int8_t *cell)
+{
+    for (int i = 0; i < 16; i++)
+        cell[i] = s_box[cell[i]];
+}
+
+void shift_rows(union Block *b)
+{
+    transpose4x4(b->cell);
+    for (uint8_t i = 1; i < 4; i++)
+        b->row[i] = ROTL(b->row[i], i*8);
+    transpose4x4(b->cell);
+}
+
 static uint8_t xtime(uint8_t x)
 {
   return ((x<<1) ^ (((x>>7) & 1) * 0x1b));
@@ -91,21 +105,6 @@ static void mix_columns(uint8_t state[4][4])
     state[i][2] ^= xtime(state[i][2] ^ state[i][3]) ^ Tmp;
     state[i][3] ^= xtime(state[i][3] ^ t) ^ Tmp;
   }
-}
-
-void sub_bytes(u_int8_t *cell)
-{
-    for (int i = 0; i < 16; i++)
-        cell[i] = s_box[cell[i]];
-}
-
-// TODO: improve this function
-void shift_rows(union Block *b)
-{
-    transpose4x4(b->cell);
-    for (uint8_t i = 1; i < 4; i++)
-        b->row[i] = ROTL(b->row[i], i*8);
-    transpose4x4(b->cell);
 }
 
 union ex_Key {
