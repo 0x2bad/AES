@@ -122,16 +122,13 @@ void ecb_encrypt(union Block *text, union ex_Key *key)
 {
     add_round_key(text, key->block);
 
-    for (int i = 1; i < 10; i++) {
+    for (int i = 1; i < 11; i++) {
         sub_bytes(text->cell);
         shift_rows(text);
-        mix_columns(text->cell_2d);
+        if (i != 10)
+            mix_columns(text->cell_2d);
         add_round_key(text, key->block + i);
     }
-
-    sub_bytes(text->cell);
-    shift_rows(text);
-    add_round_key(text, key->block + 10);
 }
 
 int main(int argc, char *argv[])
