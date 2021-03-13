@@ -85,10 +85,7 @@ void shift_rows(union Block *b)
     transpose4x4(b->cell);
 }
 
-static uint8_t xtime(uint8_t x)
-{
-  return ((x<<1) ^ (((x>>7) & 1) * 0x1b));
-}
+#define XTIME(x) (((x)<<1) ^ ((((x)>>7) & 1) * 0x1b))
 
 // Function is mostly from
 // https://github.com/kokke/tiny-AES-c/blob/master/aes.c
@@ -99,10 +96,10 @@ static void mix_columns(uint8_t state[4][4])
   {  
     t = state[i][0];
     Tmp = state[i][0] ^ state[i][1] ^ state[i][2] ^ state[i][3] ;
-    state[i][0] ^= xtime(state[i][0] ^ state[i][1]) ^ Tmp;
-    state[i][1] ^= xtime(state[i][1] ^ state[i][2]) ^ Tmp;
-    state[i][2] ^= xtime(state[i][2] ^ state[i][3]) ^ Tmp;
-    state[i][3] ^= xtime(state[i][3] ^ t) ^ Tmp;
+    state[i][0] ^= XTIME(state[i][0] ^ state[i][1]) ^ Tmp;
+    state[i][1] ^= XTIME(state[i][1] ^ state[i][2]) ^ Tmp;
+    state[i][2] ^= XTIME(state[i][2] ^ state[i][3]) ^ Tmp;
+    state[i][3] ^= XTIME(state[i][3] ^ t) ^ Tmp;
   }
 }
 
